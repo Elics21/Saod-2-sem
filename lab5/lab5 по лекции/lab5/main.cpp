@@ -2,7 +2,6 @@
 
 using namespace std;
 bool Rost = false;
-bool Umen = false;
 
 struct Tree {
     int data;
@@ -68,6 +67,7 @@ void LR_turn(Tree*& p) {
 
     p = r;
 }
+
 
 void RL_turn(Tree*& p) {
     Tree* q = p->right;
@@ -154,128 +154,160 @@ void addElementToTree(Tree*& p, int data) {
     }
 }
 
-void LL1_turn(Tree*& p) {
-    Tree* q = p->right;
-    p->right = q->left;
-    q->left = p;
+void LL1(Tree*& p, bool& decrease) {
+    Tree* q = p->left;
+
     if (q->bal == 0) {
-        q->bal = 1;
         p->bal = -1;
-        Umen = false;
+        q->bal = 1;
+        decrease = false;
     }
     else {
-        q->bal = 0;
         p->bal = 0;
+        q->bal = 0;
     }
-
-    p = q;
-}
-
-void RR1_turn(Tree*& p) {
-    Tree* q = p->left;
     p->left = q->right;
     q->right = p;
-
-    if (q->bal == 0) {
-        q->bal = 1;
-        p->bal = -1;
-        Umen = false;
-    }
-    else {
-        q->bal = 0;
-        p->bal = 0;
-    }
-
     p = q;
 }
 
-void BL(Tree*& p) {
-    if (p->bal == -1) {
-        p->bal = 0;
+void RR1(Tree*& p, bool& decrease) {
+    Tree* q = p->right;
+    if (q->bal == 0) {
+        p->bal = 1;
+        q->bal = -1;
+        decrease = false;
     }
+    else {
+        p->bal = 0;
+        q->bal = 0;
+    }
+    p->right = q->left;
+    q->left = p;
+    p = q;
+}
+
+void LR1(Tree*& p) {
+    Tree* q = p->left;
+    Tree* r = q->right;
+    if (r->bal < 0)
+        p->bal = 1;
+    else
+        p->bal= 0;
+
+    if (r->bal > 0)
+        q->bal = -1;
+    else
+        q->bal = 0;
+
+    r->bal = 0;
+    q->right = r->left;
+    p->left = r->right;
+    r->left = q;
+    r->right = p;
+    p = r;
+}
+
+void RL1(Tree*& p) {
+    Tree* q = p->right;
+    Tree* r = q->left;
+    if (r->bal > 0)
+        p->bal = -1;
+    else
+        p->bal = 0;
+
+    if (r->bal < 0)
+        q->bal = 1;
+    else
+        q->bal = 0;
+
+    r->bal = 0;
+    q->left = r->right;
+    p->right = r->left;
+    r->right = q;
+    r->left = p;
+    p = r;
+}
+
+
+void BL(Tree*& p, bool& decrease){
+    if (p->bal == -1)
+        p->bal = 0;
     else if (p->bal == 0) {
         p->bal = 1;
-        Umen = false;
+        decrease = false;
     }
     else if (p->bal == 1) {
-        if (p->right->bal >= 0) {
-            RR1_turn(p);
-        }
-        else {
-            RL_turn(p);
-        }
+        if (p->right->bal >= 0)
+            RR1(p, decrease);
+        else
+            RL1(p);
     }
 }
 
-void BR(Tree*& p) {
-    if (p->bal == 1) {
+void BR(Tree*& p, bool& decrease) {
+    if (p->bal == 1)
         p->bal = 0;
-    }
     else if (p->bal == 0) {
         p->bal = -1;
-        Umen = false;
+        decrease = false;
     }
     else if (p->bal == -1) {
-        if (p->left->bal <= 0) {
-            LL1_turn(p);
-        }
-        else {
-            LR_turn(p);
-        }
+        if (p->left->bal <= 0)
+            LL1(p, decrease);
+        else
+            LR1(p);
     }
 }
 
-void del(Tree*& r) {
-    Tree* q;
-    if (r->right != nullptr) {
-        del(r->right);
-        if (Umen) {
-            BR(r);
-        }
+void del(Tree*& r, Tree*& q, bool& decrease) {
+    if (r->right != NULL) {
+        del(r->right, q, decrease);
+        if (decrease)
+            BR(r, decrease);
     }
     else {
+        q->data = r->data;
         q = r;
         r = r->left;
-        Umen = true;
-        delete q;
+        decrease = true;
     }
 }
 
-void deleteElementToAVLTree(Tree*& p, int x) {
-    Tree* q = p;
-    if (p == nullptr) {
-        return;
+bool deleteElementToAVLTree(Tree*& p, int x, bool& decrease) {
+    Tree* q = NULL;
+    if (p == NULL)
+        return 1;
+    else if (p->data > x) {
+        if (deleteElementToAVLTree(p->left, x, decrease))
+            return 1;
+        if (decrease)
+            BL(p, decrease);
     }
-    else if (x < p->data) {
-        deleteElementToAVLTree(p->left, x);
-        if (Umen) {
-            BL(p);
-        }
-    }
-    else if (x > p->data) {
-        deleteElementToAVLTree(p->right, x);
-        if (Umen) {
-            BR(p);
-        }
+    else if (p->data < x) {
+        if (deleteElementToAVLTree(p->right, x, decrease))
+            return 1;
+        if (decrease)
+            BR(p, decrease);
     }
     else {
-        if (q->left == nullptr) {
-            p = q->right;
-            Umen = true;
-            delete q;
-        }
-        else if (q->right == nullptr) {
+        q = p;
+        if (q->right == NULL) {
             p = q->left;
-            Umen = true;
-            delete q;
+            decrease = true;
+        }
+        else if (q->left == NULL) {
+            p = q->right;
+            decrease = true;
         }
         else {
-            del(q->left);
-            if (Umen) {
-                BL(p);
-            }
+            del(q->left, q, decrease);
+            if (decrease)
+                BL(p, decrease);
         }
     }
+    delete (q);
+    return 0;
 }
 
 //слева направо
@@ -337,10 +369,11 @@ void createRandomArr(int arr[], int size) {
 }
 
 int main() {
-    //srand(time(0));
+    srand(time(0));
     Tree* head = nullptr;
-    int arr[9];
-    createRandomArr(arr, 9);
+    bool decrease = 0;
+    int arr[10];
+    createRandomArr(arr, 10);
 
     for (int i : arr) {
         addElementToTree(head, i);
@@ -349,11 +382,14 @@ int main() {
     leftToRight(head);
 
    for (int i : arr) {
-        deleteElementToAVLTree(head, i);
-        cout << "\n\n";
-        if (head) {
-            leftToRight(head);
-        }
+       if (!deleteElementToAVLTree(head, i, decrease)) {
+           cout << "\n\n";
+           leftToRight(head);
+       }
+       else {
+           cout << "ERROR! key = " << i;
+           break;
+       }
     }
 
     return 0;
