@@ -1,2 +1,3 @@
 ﻿  main.cpp
-  lab4_avl_Saod.vcxproj -> G:\Другие компьютеры\Компьютер\VS проэкты\SAOD\lab4_avl_Saod\x64\Debug\lab4_avl_Saod.exe
+C:\Users\pawsh\OneDrive\Рабочий стол\lab4\lab4_avl_Saod\main.cpp(201,12): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+  lab4_avl_Saod.vcxproj -> C:\Users\pawsh\OneDrive\Рабочий стол\lab4\x64\Debug\lab4_avl_Saod.exe

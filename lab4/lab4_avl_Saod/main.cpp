@@ -1,4 +1,4 @@
-#include <iostream>
+п»ї#include <iostream>
 
 using namespace std;
 
@@ -46,7 +46,6 @@ void LR_turn(Tree*& p) {
 	r->left = q;
 	r->right = p;
 	p = r;
-
 }
 
 void RL_turn(Tree*& p) {
@@ -67,10 +66,11 @@ void RL_turn(Tree*& p) {
 	r->right = q;
 	r->left = p;
 	p = r;
-
 }
 
-void addElementToTree(Tree*& p, int data, bool& Rost) {
+bool Rost=false;
+
+void addElementToTree(Tree*& p, int data) {
     if (p == nullptr) {
         p = new Tree;
         p->data = data;
@@ -80,7 +80,7 @@ void addElementToTree(Tree*& p, int data, bool& Rost) {
         Rost = true;
     }
     else if (p->data > data) {
-        addElementToTree(p->left, data, Rost);
+        addElementToTree(p->left, data);
         if (Rost) {
             if (p->bal > 0) {
                 p->bal = 0;
@@ -103,7 +103,7 @@ void addElementToTree(Tree*& p, int data, bool& Rost) {
         }
     }
     else if (p->data < data) {
-        addElementToTree(p->right, data, Rost);
+        addElementToTree(p->right, data);
         if (Rost) {
             if (p->bal < 0) {
                 p->bal = 0;
@@ -130,7 +130,7 @@ void addElementToTree(Tree*& p, int data, bool& Rost) {
     }
 }
 
-//слева направо
+//СЃР»РµРІР° РЅР°РїСЂР°РІРѕ
 void leftToRight(Tree* root) {
 	if (root) {
 		leftToRight(root->left);
@@ -139,7 +139,7 @@ void leftToRight(Tree* root) {
 	}
 }
 
-// Определение размера дерева
+// РћРїСЂРµРґРµР»РµРЅРёРµ СЂР°Р·РјРµСЂР° РґРµСЂРµРІР°
 int treeSize(Tree* root) {
 	if (root == nullptr)
 		return 0;
@@ -147,7 +147,7 @@ int treeSize(Tree* root) {
 	return treeSize(root->left) + 1 + treeSize(root->right);
 }
 
-// Определение суммы значений узлов дерева
+// РћРїСЂРµРґРµР»РµРЅРёРµ СЃСѓРјРјС‹ Р·РЅР°С‡РµРЅРёР№ СѓР·Р»РѕРІ РґРµСЂРµРІР°
 int sumTreeNodes(Tree* root) {
 	if (root == nullptr) {
 		return 0;
@@ -156,7 +156,7 @@ int sumTreeNodes(Tree* root) {
 	return root->data + sumTreeNodes(root->left) + sumTreeNodes(root->right);
 }
 
-// Определение высоты дерева
+// РћРїСЂРµРґРµР»РµРЅРёРµ РІС‹СЃРѕС‚С‹ РґРµСЂРµРІР°
 int treeHeight(Tree* root) {
 	if (root == nullptr) {
 		return 0;
@@ -165,7 +165,7 @@ int treeHeight(Tree* root) {
 	return 1 + max(treeHeight(root->left), treeHeight(root->right));
 }
 
-// Функция вычисления суммы длин путей от корня до каждой вершины на L-том уровне
+// Р¤СѓРЅРєС†РёСЏ РІС‹С‡РёСЃР»РµРЅРёСЏ СЃСѓРјРјС‹ РґР»РёРЅ РїСѓС‚РµР№ РѕС‚ РєРѕСЂРЅСЏ РґРѕ РєР°Р¶РґРѕР№ РІРµСЂС€РёРЅС‹ РЅР° L-С‚РѕРј СѓСЂРѕРІРЅРµ
 float sumPathLengths(Tree* root, int L = 1) {
 	if (root == nullptr) {
 		return 0;
@@ -174,7 +174,7 @@ float sumPathLengths(Tree* root, int L = 1) {
 	return L + sumPathLengths(root->left, L + 1) + sumPathLengths(root->right, L + 1);
 }
 
-// Определение средней длины пути в дереве
+// РћРїСЂРµРґРµР»РµРЅРёРµ СЃСЂРµРґРЅРµР№ РґР»РёРЅС‹ РїСѓС‚Рё РІ РґРµСЂРµРІРµ
 float averagePathLength(Tree* root) {
 	return (float)(sumPathLengths(root) / treeSize(root));
 }
@@ -198,12 +198,25 @@ void createRandomArr(int arr[], int size) {
 }
 
 int main() {
+	srand(time(0));
 	Tree* head = nullptr;
-	bool Rost = false;
-	int arr[100];
-	createRandomArr(arr, 100);
+	int arr[100] = { 53, 20,  4,  9, 16,  5, 87, 74, 13, 26, 50, 11,
+  25,  7, 48,  1, 19, 18, 95, 44, 66, 54, 22, 96,
+  49, 64, 51, 93,  3, 59, 28, 32, 85, 78, 56, 27,
+  83, 12, 65, 82, 37, 91, 80, 10, 70, 57, 99, 33,
+  14, 76, 84, 41,  2, 81, 97, 86,  8, 36, 46, 34,
+  72, 79, 17, 71, 89, 29, 23, 69, 38, 35, 73, 94,
+  61, 88, 68, 21, 55, 42, 62, 90, 75, 15, 58, 63,
+  47, 52, 40,  6, 24, 39, 92, 31, 60, 45,  0, 43,
+  67, 98, 30, 77 };
+	cout << "Kak podautsa dannie v derevo" << endl;
+	for (int i = 0; i < 100; i++) {
+		cout << arr[i] << " ";
+	}
+	cout << endl << endl;
+	//createRandomArr(arr, 100);
 	for (int i : arr) {
-		addElementToTree(head, i, Rost);
+		addElementToTree(head, i);
 	}
 	leftToRight(head);
 	cout << "\navg_size: " << averagePathLength(head);
