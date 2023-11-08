@@ -1,10 +1,10 @@
-#include <iostream>
+п»ї#include <iostream>
 #include <time.h>
 #include "someFunc.hpp"
 
 using namespace std;
 
-//Вычисление AW - матрицы весов :
+//Р’С‹С‡РёСЃР»РµРЅРёРµ AW - РјР°С‚СЂРёС†С‹ РІРµСЃРѕРІ :
 void calc_AW(int n, int** AW, int** W) {
 	for (int i = 0; i < n; i++) {
 		for (int j = (i + 1); j < n; j++) {
@@ -14,7 +14,7 @@ void calc_AW(int n, int** AW, int** W) {
 
 }
 
-//Вычисление матриц AP и AR :
+//Р’С‹С‡РёСЃР»РµРЅРёРµ РјР°С‚СЂРёС† AP Рё AR :
 void calc_AP_AR(int n, int** AP, int** AR, int** AW) {
 	for (int i = 0; i < n - 1; i++) {
 		int j = i + 1;
@@ -39,7 +39,7 @@ void calc_AP_AR(int n, int** AP, int** AR, int** AW) {
 	}
 }
 
-//Добавить В СДП
+//Р”РѕР±Р°РІРёС‚СЊ Р’ РЎР”Рџ
 void addSDP(Tree*& root, int data, int weight) {
 	if (root == NULL) {
 		root = new Tree;
@@ -52,7 +52,7 @@ void addSDP(Tree*& root, int data, int weight) {
 		addSDP(root->right, data, weight);
 }
 
-//Создание дерева 
+//РЎРѕР·РґР°РЅРёРµ РґРµСЂРµРІР° 
 void createTree(Tree*& root, int L, int R, int** AR, int** W) {
 	if (L < R) {
 		int k = AR[L][R];
@@ -72,11 +72,11 @@ int main() {
 		W[i] = new int[size];
 	}
 
-	// Заполение вершин неповторяющимися числами 
-	bool table[2 * size] = { 0 }; //для отслеживания использовались ли числа для создания вершин
+	// Р—Р°РїРѕР»РµРЅРёРµ РІРµСЂС€РёРЅ РЅРµРїРѕРІС‚РѕСЂСЏСЋС‰РёРјРёСЃСЏ С‡РёСЃР»Р°РјРё 
+	bool table[2 * size] = { 0 }; //РґР»СЏ РѕС‚СЃР»РµР¶РёРІР°РЅРёСЏ РёСЃРїРѕР»СЊР·РѕРІР°Р»РёСЃСЊ Р»Рё С‡РёСЃР»Р° РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РІРµСЂС€РёРЅ
 	int x;
 	for (int i = 1; i < size + 1; i++) {
-		//ищем элемент который еще не использовали
+		//РёС‰РµРј СЌР»РµРјРµРЅС‚ РєРѕС‚РѕСЂС‹Р№ РµС‰Рµ РЅРµ РёСЃРїРѕР»СЊР·РѕРІР°Р»Рё
 		while (true) {
 			x = rand() % (2 * size);
 			if (!table[x]) {
@@ -87,7 +87,7 @@ int main() {
 		table[x] = true;
 		W[0][i] = x;
 	}
-	// Сортировка вершин
+	// РЎРѕСЂС‚РёСЂРѕРІРєР° РІРµСЂС€РёРЅ
 	for (int i = 1; i < size + 1; i++) {
 		for (int j = size - 1 + 1; j > i; j--) {
 			if (W[0][j] < W[0][j - 1]) {
@@ -95,18 +95,18 @@ int main() {
 			}
 		}
 	}
-	// Случайные веса для вершин
+	// РЎР»СѓС‡Р°Р№РЅС‹Рµ РІРµСЃР° РґР»СЏ РІРµСЂС€РёРЅ
 	for (int i = 1; i < size + 1; i++) {
 		W[1][i] = rand() % size + 1;
 	}
 
 	cout << "*************************** Nachalnie-Dannie ***************************\n";
 	
-	// Вывод начальных данных и весов
+	// Р’С‹РІРѕРґ РЅР°С‡Р°Р»СЊРЅС‹С… РґР°РЅРЅС‹С… Рё РІРµСЃРѕРІ
 	int tmp = 0;
 	for (int i = 1; i < size + 1; i++) {
 		cout.width(5);
-		cout << W[0][i]; // выводим вершину
+		cout << W[0][i]; // РІС‹РІРѕРґРёРј РІРµСЂС€РёРЅСѓ
 		cout << "[";
 		cout.width(3);
 		cout << W[1][i];
@@ -118,11 +118,11 @@ int main() {
 		}
 	}
 
-	int** AW = new int* [size + 1]; // матрица весов
-	int** AP = new int* [size + 1]; // матрица взвешенных высот
-	int** AR = new int* [size + 1]; // матрица индексов
+	int** AW = new int* [size + 1]; // РјР°С‚СЂРёС†Р° РІРµСЃРѕРІ
+	int** AP = new int* [size + 1]; // РјР°С‚СЂРёС†Р° РІР·РІРµС€РµРЅРЅС‹С… РІС‹СЃРѕС‚
+	int** AR = new int* [size + 1]; // РјР°С‚СЂРёС†Р° РёРЅРґРµРєСЃРѕРІ
 
-	//выделение памяти и заполнение нулями
+	//РІС‹РґРµР»РµРЅРёРµ РїР°РјСЏС‚Рё Рё Р·Р°РїРѕР»РЅРµРЅРёРµ РЅСѓР»СЏРјРё
 	for (int i = 0; i < size + 1; i++) {
 		AW[i] = new int[size + 1];
 		AP[i] = new int[size + 1];
