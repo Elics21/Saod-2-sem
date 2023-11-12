@@ -126,6 +126,7 @@ int main() {
 		table[x] = true;
 		W[0][i] = x;
 	}
+	
 	// Сортировка вершин
 	for (int i = 1; i < size + 1; i++) {
 		for (int j = size - 1 + 1; j > i; j--) {
